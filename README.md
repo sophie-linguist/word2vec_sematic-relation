@@ -1,5 +1,9 @@
 ## Word2Vec이 표상하는 의미 관계
 
+* 개인 프로젝트로 수행해 본 내용임.  
+* 국립국어원의 세종형태분석말뭉치(문어)를 이용함. 
+* github 사용법에 익숙치 않아서 만든 모델을 올릴 수가 없었음...(용량이 너무 커서.. 방법을 찾아야 함) 
+
 ### 배경 지식: 의미 관계(Sementic Relation) 
 
 Source : Lobner, Sebastian. 2013. Understanding Semantics (2nd edition). Routledge.
