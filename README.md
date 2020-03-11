@@ -1,11 +1,39 @@
 * 작업물을 올리는 용도로 사용하고 있는 github
   - 코퍼스는 국립국어원 언어정보나눔터에서 받을 수 있음
   - Word2Vec 모델은 용량 제한이 있어서 올리지 못함. github 초보라...이후 보완 필요
+  
+### DATA
 
-## Word2Vec이 표상하는 의미 관계
+21세기 세종계획 세종형태분석말뭉치 (약 1,000어절 규모)
 
-* 개인 프로젝트로 수행해 본 내용임.  
-* 국립국어원의 세종형태분석말뭉치(문어)를 이용함. 
+### 질문
+    
+   1. Word2Vec은 주로 어떤 의미 관계를 나타내는가? 
+       - Word2vec은 단어의 빈도와 순서를 동시에 고려하는 알고리즘이다. 
+       - 즉, 어떤 표현의 벡터가 유사하다면 이들은 유사한 도메인의 유사한 맥락에서 대체될 수 있는 표현들일 것이다.  
+       - Complementary opposition, Heteronymy와 같은 반의 관계에 속한 표현들이 이 조건에 부합한다.
+       - 확인해 보자. 
+    
+   2. 그렇다면 Word2Vec을 통해 얻은 단어의 벡터는 어떻게 사용하는 것이 좋을까?
+
+### 작업 순서
+
+1. **전처리**
+    1. 어절 단위로 분리된 형태분석 말뭉치를 p 태그 단위(문장? 문단? 단위로) 변환한다.
+    2. 곧은 따옴표(",')를 <따옴표>로 치환한다. 
+    3. "/"를 "_" 로 치환한다. 
+    4. 형용사파생접미사(XSA), 동사파생접미사(XSV)는 바로 앞의 형태와 연결하여 형용사, 동사로 치환한다. (공부+하 => 공부하/VV)
+    5. 보조용언(VX)은 바로 앞의 형태와 연결하며 V태그를 준다. (올려다+보 => 올려다_보/V)
+    6. NNG(일반명사) 태그가 있는 모든 표현을 'N'으로 치환한다 (Optional, 명사 외 다른 요소에 집중하고 싶다면)
+
+2. **구 탐지(Phrase detection, gensim library)**
+    1. 전처리 결과를 모두 합친 후 gensim library의 phrase detection을 2회 실행한다. (자주 쓰이는 최대 4 형태소까지 결합)
+    2. 전처리 결과에 형태분석 말뭉치에 phrase detection 결과를 반영한다. 
+
+3. **Word2Vec**
+    1. Word2Vec을 실시하여 단어 벡터를 구한다. 
+    2. 각 의미 관계를 대표하는 단어와 유사한 단어들을 확인한다. 
+    3. t-sne를 이용하여 표현 간의 관계를 확인한다.
 
 
 ### 배경 지식: 의미 관계(Sementic Relation) 
@@ -80,37 +108,7 @@ Source : Lobner, Sebastian. 2013. Understanding Semantics (2nd edition). Routled
         - A set of expressions forms a mereology iff they form a hierarchy in terms of holonyms and meronyms, where A is a **meronym** of B, and B is **holonym** of A, iff A denotes constitutive parts of the kind of thing that B denotes.
         - body - (head, neck, trunk, leg, arm...)
     
-### 질문
-    
-   1. Word2Vec은 주로 어떤 의미 관계를 나타내는가? 
-       - Word2vec은 단어의 빈도와 순서를 동시에 고려하는 알고리즘이다. 
-       - 즉, 어떤 표현의 벡터가 유사하다면 이들은 유사한 도메인의 유사한 맥락에서 대체될 수 있는 표현들일 것이다.  
-       - Complementary opposition, Heteronymy와 같은 반의 관계에 속한 표현들이 이 조건에 부합한다.
-       - 확인해 보자. 
-    
-    
-   2. 그렇다면 Word2Vec을 통해 얻은 단어의 벡터는 어떻게 사용하는 것이 좋을까?
+
    
 
-### DATA
 
-21세기 세종계획 세종형태분석말뭉치 (약 1,000어절 규모)
-
-### 작업 순서
-
-1. **전처리**
-    1. 어절 단위로 분리된 형태분석 말뭉치를 p 태그 단위(문장? 문단? 단위로) 변환한다.
-    2. 곧은 따옴표(",')를 <따옴표>로 치환한다. 
-    3. "/"를 "_" 로 치환한다. 
-    4. 형용사파생접미사(XSA), 동사파생접미사(XSV)는 바로 앞의 형태와 연결하여 형용사, 동사로 치환한다. (공부+하 => 공부하/VV)
-    5. 보조용언(VX)은 바로 앞의 형태와 연결하며 V태그를 준다. (올려다+보 => 올려다_보/V)
-    6. NNG(일반명사) 태그가 있는 모든 표현을 'N'으로 치환한다 (Optional, 명사 외 다른 요소에 집중하고 싶다면)
-
-2. **구 탐지(Phrase detection, gensim library)**
-    1. 전처리 결과를 모두 합친 후 gensim library의 phrase detection을 2회 실행한다. (자주 쓰이는 최대 4 형태소까지 결합)
-    2. 전처리 결과에 형태분석 말뭉치에 phrase detection 결과를 반영한다. 
-
-3. **Word2Vec**
-    1. Word2Vec을 실시하여 단어 벡터를 구한다. 
-    2. 각 의미 관계를 대표하는 단어와 유사한 단어들을 확인한다. 
-    3. t-sne를 이용하여 표현 간의 관계를 확인한다.
