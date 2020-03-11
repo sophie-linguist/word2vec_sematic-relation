@@ -107,7 +107,7 @@ Source : Lobner, Sebastian. 2013. Understanding Semantics (2nd edition). Routled
     6. NNG(일반명사) 태그가 있는 모든 표현을 'N'으로 치환한다 (Optional, 명사 외 다른 요소에 집중하고 싶다면)
 
 2. **구 탐지(Phrase detection, gensim library)**
-    1. 전처리 결과를 모두 합친 후 gensim library의 phrase detection을 2회 실행한다. (자주 쓰이는 최대 4어절까지 결합)
+    1. 전처리 결과를 모두 합친 후 gensim library의 phrase detection을 2회 실행한다. (자주 쓰이는 최대 4 형태소까지 결합)
     2. 전처리 결과에 형태분석 말뭉치에 phrase detection 결과를 반영한다. 
 
 3. **Word2Vec**
